@@ -3,17 +3,12 @@ import PropTypes from 'prop-types';
 
 import { Item, ItemField, DeleteButton } from './ContactItem.styled';
 
-export const ContactItem = ({ contact, deleteContact }) => {
-  const { name, number } = contact;
+export const ContactItem = ({ name, number, id, deleteContact }) => {
   return (
     <Item>
       <ItemField>{name}:</ItemField>
       <ItemField>{number}</ItemField>
-      <DeleteButton
-        type="button"
-        contact={contact.id}
-        onClick={() => deleteContact(contact.id)}
-      >
+      <DeleteButton type="button" onClick={() => deleteContact(id)}>
         delete
       </DeleteButton>
     </Item>

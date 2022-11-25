@@ -6,11 +6,13 @@ import { ContactItem } from '../ContactItem/ContactItem';
 export const ContactsList = ({ contacts, deleteContact }) => {
   return (
     <ul>
-      {contacts.map(contact => (
+      {contacts.map(({ id, name, number }) => (
         <ContactItem
           deleteContact={deleteContact}
-          key={contact.id}
-          contact={contact}
+          key={id}
+          contact={name}
+          number={number}
+          id={id}
         />
       ))}
     </ul>

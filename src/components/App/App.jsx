@@ -11,8 +11,9 @@ import {
 } from 'components/Constants/localStorage';
 
 import { Container } from '../ContactList/Container.styled';
+import { useEffect } from 'react';
 
-export function App() {
+export const App = () => {
   const [contacts, setContacts] = useState(
     getFromLocalStorage('contacts') ?? baseContacts
   );
@@ -26,12 +27,12 @@ export function App() {
         return alert(`${name} is already in contacts.`);
       }
     }
-    setContacts(prevState => [...prevState, contact]);
+    setContacts(prevState => [contact, ...prevState]);
   };
 
   const deleteContact = contactId => {
     setContacts(prevState =>
-      prevStart.filter(contact => contact.id !== contactId)
+      prevState.filter(contact => contact.id !== contactId)
     );
   };
 
@@ -40,26 +41,30 @@ export function App() {
       filter: event.currentTarget.value,
     });
 
-  const filteredContacts = () => {
+  const filteredContacts = (contacts, filter) => {
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contacts =>
       contacts.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
+  useEffect(() => {
+    setToLocalStorage('contacts, contacts');
+  }, [contacts]);
+
   return (
     <Container>
       <h1>Phonebook</h1>
       <ContactForm onSubmit={formCreateContacts}></ContactForm>
       <h2>Contacts</h2>
-      {/* <Filter onFilter={this.onFilter} filter={filter}></Filter> */}
+      <Filter onFilter={onFilter} filter={filter}></Filter>
       <ContactsList
-        deleteContact={this.deleteContact}
-        // contacts={filteredList}
+        deleteContact={deleteContact}
+        contacts={filteredContacts}
       ></ContactsList>
     </Container>
   );
-}
+};
 
 // state = {
 //   contacts: [
