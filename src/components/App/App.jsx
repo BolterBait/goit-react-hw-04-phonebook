@@ -19,14 +19,13 @@ export const App = () => {
   );
   const [filter, setFilter] = useState('');
 
-  const formCreateContacts = contacts => {
-    const { name, number } = contacts;
-    const contact = { id: nanoid(), name, number };
-    for (const newContact of contacts) {
-      if (newContact.name === name) {
+  const formCreateContacts = (name, number) => {
+    for (const contact of contacts) {
+      if (contact.name === name) {
         return alert(`${name} is already in contacts.`);
       }
     }
+    const contact = { id: nanoid(), name, number };
     setContacts(prevState => [contact, ...prevState]);
   };
 
@@ -36,32 +35,30 @@ export const App = () => {
     );
   };
 
-  const onFilter = event =>
-    setFilter({
-      filter: event.currentTarget.value,
-    });
+  const onFilter = event => {
+    setFilter(event.currentTarget.value);
+  };
 
-  const filteredContacts = (contacts, filter) => {
+  const renderFilteredContacts = (contacts, filter) => {
     const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contacts =>
-      contacts.name.toLowerCase().includes(normalizedFilter)
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
+  const filteredContacts = renderFilteredContacts(contacts, filter);
+
   useEffect(() => {
-    setToLocalStorage('contacts, contacts');
+    setToLocalStorage('contacts', contacts);
   }, [contacts]);
 
   return (
     <Container>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={formCreateContacts}></ContactForm>
+      <ContactForm onSubmit={formCreateContacts} />
       <h2>Contacts</h2>
-      <Filter onFilter={onFilter} filter={filter}></Filter>
-      <ContactsList
-        deleteContact={deleteContact}
-        contacts={filteredContacts}
-      ></ContactsList>
+      <Filter onFilter={onFilter} filter={filter} />
+      <ContactsList contacts={filteredContacts} deleteContact={deleteContact} />
     </Container>
   );
 };
